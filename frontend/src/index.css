@@ -462,9 +462,40 @@ a:hover {
 
 /* --- Quiz Interface Playground --- */
 .jh-quiz-lab {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem 1rem 3rem;
+  padding: 2rem 2rem 3rem;
+}
+
+/* Active quiz 2-column desktop layout */
+.jh-quiz-active-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.jh-quiz-active-main {
+  min-width: 0;
+}
+
+.jh-quiz-active-sidebar .jh-sidebar-card {
+  position: sticky;
+  top: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .jh-quiz-active-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .jh-quiz-active-sidebar {
+    display: none;
+  }
+
+  .jh-quiz-lab {
+    padding: 1.5rem 1rem 2rem;
+  }
 }
 
 .jh-quiz-form {
@@ -634,6 +665,126 @@ a:hover {
   max-width: 700px;
   margin: 0 auto;
   padding: 2rem 1rem;
+}
+
+/* Desktop results page with side panels */
+.jh-results-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 2rem;
+}
+
+.jh-results-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr 240px;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  align-items: start;
+}
+
+.jh-results-main {
+  min-width: 0;
+}
+
+.jh-sidebar-card {
+  background: var(--jh-white);
+  border-radius: var(--jh-radius-lg);
+  padding: 1.5rem;
+  border: 1px solid var(--jh-gray-200);
+  box-shadow: var(--jh-shadow-sm);
+  position: sticky;
+  top: 1.5rem;
+}
+
+.jh-sidebar-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--jh-gray-800);
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--jh-gray-100);
+}
+
+.jh-sidebar-section-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--jh-gray-500);
+  margin: 1rem 0 0.4rem;
+}
+
+.jh-sidebar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.jh-sidebar-list li {
+  padding: 0.35rem 0;
+  color: var(--jh-gray-700);
+  font-size: 0.875rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  line-height: 1.4;
+}
+
+.jh-sidebar-list li::before {
+  content: '✓';
+  color: var(--jh-orange);
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+
+.jh-sidebar-tip {
+  margin-top: 1.25rem;
+  padding: 0.875rem;
+  background: var(--jh-gray-50);
+  border-radius: var(--jh-radius-md);
+  font-size: 0.825rem;
+  color: var(--jh-gray-600);
+  line-height: 1.5;
+}
+
+.jh-sidebar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.jh-sidebar-actions .jh-btn-primary,
+.jh-sidebar-actions .jh-btn-secondary {
+  width: 100%;
+  text-align: center;
+  display: block;
+}
+
+@media (max-width: 1100px) {
+  .jh-results-layout {
+    grid-template-columns: 200px 1fr 200px;
+  }
+}
+
+@media (min-width: 901px) {
+  .jh-results-mobile-actions {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .jh-results-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .jh-results-sidebar {
+    display: none;
+  }
+
+  .jh-results-page {
+    padding: 1.5rem 1rem;
+  }
 }
 
 .jh-motivation-card {

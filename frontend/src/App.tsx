@@ -14,7 +14,7 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/quiz" element={<Quiz />} />
+          <Route path="/quiz" element={<QuizInterface />} />
           <Route path="/quiz/interface" element={<QuizInterface />} />
           <Route path="/quiz/results" element={<QuizResults />} />
           <Route path="/jobs" element={<Jobs />} />

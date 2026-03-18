@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import type { HTMLInputTypeAttribute } from 'react';
 import {
   ChipGroupQuestion,
@@ -46,6 +46,7 @@ export interface QuestionStepperProps {
   questions: QuestionDef[];
   initialAnswers?: Record<string, unknown>;
   onComplete?: (answers: Record<string, unknown>) => void;
+  submitting?: boolean;
   title?: string;
   description?: string;
 }
@@ -61,8 +62,9 @@ export default function QuestionStepper({
   questions,
   initialAnswers,
   onComplete,
-  title = 'Step-through quiz shell',
-  description = 'One question at a time. Wire your own data and submit handler.',
+  submitting = false,
+  title,
+  description,
 }: QuestionStepperProps) {
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Record<string, unknown>>(initialAnswers ?? {});
@@ -72,16 +74,6 @@ export default function QuestionStepper({
   const currentValue = answers[question?.id];
   const answered = isAnswered(currentValue) || !question?.required;
   const progress = total > 0 ? Math.round(((current + 1) / total) * 100) : 0;
-
-  const summary = useMemo(
-    () =>
-      Object.entries(answers).map(([key, value]) => {
-        if (value instanceof File) return [key, value.name];
-        if (Array.isArray(value)) return [key, value.join(', ') || '—'];
-        return [key, value !== undefined && value !== null ? String(value) : '—'];
-      }),
-    [answers]
-  );
 
   function setAnswer(id: string, value: unknown) {
     setAnswers((prev) => ({ ...prev, [id]: value }));
@@ -243,21 +235,19 @@ export default function QuestionStepper({
   }
 
   return (
-    <div className="jh-quiz-card" aria-live="polite">
-      <div className="jh-quiz-progress" style={{ marginBottom: '1.25rem' }}>
+    <div className="jh-quiz-card jh-quiz-card--desktop" aria-live="polite">
+      <div className="jh-quiz-progress" style={{ marginBottom: '1.5rem' }}>
         <div className="jh-quiz-progress-bar">
           <div className="jh-quiz-progress-fill" style={{ width: `${progress}%` }} />
         </div>
         <div className="jh-quiz-progress-text">
-          <span>
-            {current + 1} of {total}
-          </span>
+          <span>Question {current + 1} of {total}</span>
           <span>{progress}%</span>
         </div>
       </div>
 
-      <h3 style={{ marginTop: 0 }}>{title}</h3>
-      <p style={{ color: 'var(--jh-gray-600)', marginTop: '0.35rem' }}>{description}</p>
+      {title && <h3 style={{ marginTop: 0 }}>{title}</h3>}
+      {description && <p style={{ color: 'var(--jh-gray-600)', marginTop: '0.35rem' }}>{description}</p>}
 
       <div style={{ margin: '1.25rem 0' }}>{renderQuestion()}</div>
 
@@ -266,27 +256,21 @@ export default function QuestionStepper({
           className="jh-btn-secondary"
           onClick={back}
           style={{ visibility: current > 0 ? 'visible' : 'hidden' }}
+          disabled={submitting}
         >
           ← Back
         </button>
         <button
           className="jh-btn-primary"
           onClick={next}
-          disabled={!answered}
+          disabled={!answered || submitting}
         >
-          {current >= total - 1 ? 'Finish' : 'Next →'}
+          {submitting && current >= total - 1
+            ? 'Submitting…'
+            : current >= total - 1
+            ? 'Finish'
+            : 'Next →'}
         </button>
-      </div>
-
-      <div className="jh-form-summary" style={{ marginTop: '1.25rem' }}>
-        <h4 style={{ marginTop: 0 }}>Live answers</h4>
-        <ul>
-          {summary.map(([key, value]) => (
-            <li key={key}>
-              <strong>{key}:</strong> <span>{value}</span>
-            </li>
-          ))}
-        </ul>
       </div>
     </div>
   );

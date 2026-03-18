@@ -1,14 +1,12 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_SECRET_KEY;
 
-if (!supabaseUrl) {
-  throw new Error('SUPABASE_URL is not set');
+if (!supabaseUrl || !supabaseServiceRoleKey) {
+  console.warn('[db] SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY not set — DB persistence disabled');
 }
 
-if (!supabaseServiceRoleKey) {
-  throw new Error('SUPABASE_SERVICE_ROLE_KEY is not set');
-}
-
-export const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+export const supabase: SupabaseClient = (supabaseUrl && supabaseServiceRoleKey)
+  ? createClient(supabaseUrl, supabaseServiceRoleKey)
+  : createClient('http://localhost:54321', 'placeholder');
