@@ -19,6 +19,8 @@ export interface Job {
   location: string;
   salary: string;
   type: string;
+  description?: string;
+  personalityType?: string;
   fitScore: number;
   fitLevel: string;
   fitReason: string;
@@ -73,6 +75,23 @@ export interface JobsApiResponse {
 export interface RecruitApiResponse {
   recommendedApplicants: Applicant[];
   allApplicants: Applicant[];
+}
+
+export interface CreateJobRequest {
+  title: string;
+  company: string;
+  logoEmoji: string;
+  location: string;
+  salary: string;
+  type: string;
+  description: string;
+  personalityType: string;
+  tags: string;
+}
+
+export interface CreateJobResponse {
+  job: Job;
+  source: 'supabase' | 'memory';
 }
 
 export interface UserProfile {
