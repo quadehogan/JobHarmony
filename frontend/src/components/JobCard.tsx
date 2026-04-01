@@ -1,4 +1,5 @@
 import { Job } from '../types';
+import { useAuth } from '../context/AuthContext';
 import { showSnackbar } from './Snackbar';
 
 const STORAGE_KEY = 'jh-saved-jobs';
@@ -17,6 +18,8 @@ interface JobCardProps {
 }
 
 export default function JobCard({ job, onSaveToggle }: JobCardProps) {
+  const { user } = useAuth();
+  const showMatch = Boolean(user);
   const savedIds = getSavedIds();
   const isSaved = savedIds.includes(String(job.id));
 
@@ -68,8 +71,8 @@ export default function JobCard({ job, onSaveToggle }: JobCardProps) {
           <h3>{job.title}</h3>
           <div className="jh-job-company">{job.company}</div>
         </div>
-        {showFit ? (
-          <div className={`jh-fit-badge ${job.fitLevel.toLowerCase()}`}>{job.fitScore}%</div>
+        {!showMatch ? null : showFit ? (
+          <div className={`jh-fit-badge ${(job.fitLevel || 'moderate').toLowerCase()}`}>{job.fitScore}%</div>
         ) : (
           <div className="jh-fit-badge-placeholder" aria-hidden="true" />
         )}
@@ -81,7 +84,7 @@ export default function JobCard({ job, onSaveToggle }: JobCardProps) {
         ))}
       </div>
 
-      {showFit ? <div className="jh-job-fit-reason">{job.fitReason}</div> : null}
+      {showMatch && showFit ? <div className="jh-job-fit-reason">{job.fitReason}</div> : null}
 
       <div className="jh-job-meta">
         <span>📍 {job.location}</span>
