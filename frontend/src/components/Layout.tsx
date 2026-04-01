@@ -72,11 +72,13 @@ export default function Layout() {
                   </NavLink>
                 </li>
               )}
-              <li>
-                <NavLink to="/quiz" className={({ isActive }) => 'jh-nav-link' + (isActive ? ' active' : '')} onClick={closeMenu}>
-                  Quiz
-                </NavLink>
-              </li>
+              {!isRecruiter && (
+                <li>
+                  <NavLink to="/quiz" className={({ isActive }) => 'jh-nav-link' + (isActive ? ' active' : '')} onClick={closeMenu}>
+                    Quiz
+                  </NavLink>
+                </li>
+              )}
 
               {hasResults && (
                 <li>
@@ -184,7 +186,7 @@ export default function Layout() {
           </div>
           <ul className="jh-footer-links">
             <li><NavLink to="/">Home</NavLink></li>
-            <li><NavLink to="/quiz">Quiz</NavLink></li>
+            {!isRecruiter && <li><NavLink to="/quiz">Quiz</NavLink></li>}
             {!isRecruiter && <li><NavLink to="/jobs">Jobs</NavLink></li>}
             {user && <li><NavLink to="/profile/edit">Edit Profile</NavLink></li>}
           </ul>
