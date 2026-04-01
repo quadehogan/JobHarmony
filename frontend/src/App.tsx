@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Unauthorized from './pages/Unauthorized';
 import AuthCallback from './pages/AuthCallback';
+import Okr from './pages/Okr';
 import CandidateDashboard from './pages/CandidateDashboard';
 import RecruiterDashboard from './pages/RecruiterDashboard';
 import AddJob from './pages/AddJob';
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="/quiz/results" element={<QuizResults />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/okr" element={<Okr />} />
 
           {/* Authenticated routes (any role) */}
           <Route element={<RequireAuth />}>
