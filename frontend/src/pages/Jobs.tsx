@@ -98,9 +98,11 @@ export default function Jobs() {
         <p>
           {view === 'saved'
             ? "Jobs you've bookmarked for later."
-            : data?.fitPersonalized
-              ? 'Jobs ranked by how well they match your personality profile.'
-              : 'Browse open roles. Sign in and complete the quiz to see a personalized fit score on each listing.'}
+            : data === null
+              ? 'Browse open roles and filter by what matters to you.'
+              : data.fitPersonalized
+                ? 'Jobs ranked by how well they match your personality profile.'
+                : 'Browse open roles. Sign in and complete the quiz to see a personalized fit score on each listing.'}
         </p>
       </div>
 
