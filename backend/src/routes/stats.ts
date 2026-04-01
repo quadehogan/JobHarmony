@@ -1,19 +1,25 @@
 import { Router, Request, Response } from 'express';
-import { sql } from '../db/database';
+import { supabase } from '../db/database';
 
 const router = Router();
 
 router.get('/users-with-quiz-scores', async (_req: Request, res: Response) => {
   try {
-    const rows = await sql<{ count: string }[]>`
-      SELECT COUNT(DISTINCT qs.user_id)::text AS count
-      FROM quiz_sessions qs
-      INNER JOIN dimension_scores ds ON ds.session_id = qs.id
-      WHERE qs.user_id IS NOT NULL
-    `;
-    const raw = rows[0]?.count ?? '0';
-    const count = Number.parseInt(raw, 10);
-    res.json({ count: Number.isFinite(count) ? count : 0 });
+    const { data, error } = await supabase
+      .from('dimension_scores')
+      .select('quiz_sessions!inner(user_id)')
+      .not('quiz_sessions.user_id', 'is', null);
+
+    if (error) {
+      console.error('Failed to count users with quiz scores:', error);
+      res.status(500).json({ message: 'Failed to load stats' });
+      return;
+    }
+
+    const userIds = new Set(
+      (data as any[]).map((row) => row.quiz_sessions?.user_id).filter(Boolean)
+    );
+    res.json({ count: userIds.size });
   } catch (err) {
     console.error('Failed to count users with quiz scores:', err);
     res.status(500).json({ message: 'Failed to load stats' });
