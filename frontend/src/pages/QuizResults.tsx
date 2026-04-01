@@ -230,8 +230,9 @@ export default function QuizResults() {
         </div>
       </div>
 
-      <div style={{ marginTop: '2rem' }}>
+      <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem' }}>
         <button className="jh-btn-secondary" onClick={handleRetake}>Retake Quiz</button>
+        <Link to="/jobs" className="jh-btn-primary">Browse Jobs</Link>
       </div>
     </div>
   );
