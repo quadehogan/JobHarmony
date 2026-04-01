@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Job, JobsApiResponse } from '../types';
 import JobCard from '../components/JobCard';
 import { apiClient } from '../lib/apiClient';
+import { useAuth } from '../context/AuthContext';
 
 const STORAGE_KEY = 'jh-saved-jobs';
 
@@ -15,6 +16,7 @@ function getSavedIds(): string[] {
 }
 
 export default function SavedJobs() {
+  const { user } = useAuth();
   const [allJobs, setAllJobs] = useState<Job[]>([]);
   const [savedIds, setSavedIds] = useState<string[]>(getSavedIds());
   const [error, setError] = useState<string | null>(null);
@@ -40,7 +42,7 @@ export default function SavedJobs() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [user?.id]);
 
   const handleSaveToggle = useCallback(() => {
     setSavedIds(getSavedIds());

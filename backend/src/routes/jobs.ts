@@ -87,6 +87,10 @@ async function getLatestAggregateScores(userId: string): Promise<{ dimension: st
   }));
 }
 
+function stripJobFit(job: Job): Job {
+  return { ...job, fitScore: 0, fitLevel: '', fitReason: '' };
+}
+
 router.get('/', optionalAuth, async (req: Request, res: Response) => {
   const authUserId = (req as AuthenticatedRequest).authUser?.id ?? null;
   const { data, error } = await supabase.from('Jobs').select('*').order('Id', { ascending: true });
@@ -135,9 +139,11 @@ router.get('/', optionalAuth, async (req: Request, res: Response) => {
     }));
   }
 
+  let fitPersonalized = false;
   if (authUserId) {
     const aggregateScores = await getLatestAggregateScores(authUserId);
     if (aggregateScores && aggregateScores.length > 0) {
+      fitPersonalized = true;
       const userVector = buildUserVector(
         aggregateScores.map((s) => ({
           dimension: s.dimension,
@@ -150,7 +156,7 @@ router.get('/', optionalAuth, async (req: Request, res: Response) => {
       jobs = jobs
         .map((job) => {
           const targetVector = buildTargetVector(job);
-          if (!targetVector) return job;
+          if (!targetVector) return stripJobFit(job);
           const jobVector = buildJobVector(targetVector);
           const distance = weightedEuclideanDistance(userVector, jobVector);
           const fitScore = distanceToMatchPercent(distance);
@@ -165,6 +171,10 @@ router.get('/', optionalAuth, async (req: Request, res: Response) => {
     }
   }
 
+  if (!fitPersonalized) {
+    jobs = jobs.map(stripJobFit);
+  }
+
   const allTags = [...new Set(jobs.flatMap((j) => j.tags))];
   const allTypes = [...new Set(jobs.map((j) => j.type))];
   const allLocations = [...new Set(jobs.map((j) => j.location))];
@@ -174,6 +184,7 @@ router.get('/', optionalAuth, async (req: Request, res: Response) => {
     allTags,
     allTypes,
     allLocations,
+    fitPersonalized,
     source: error ? 'seed' : 'supabase',
   });
 });

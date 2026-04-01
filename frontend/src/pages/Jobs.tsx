@@ -17,7 +17,7 @@ function getSavedIds(): string[] {
 }
 
 export default function Jobs() {
-  const { userProfile } = useAuth();
+  const { user, userProfile } = useAuth();
   const [data, setData] = useState<JobsApiResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
@@ -54,7 +54,7 @@ export default function Jobs() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [user?.id]);
 
   // Re-render job cards when save state changes
   const handleSaveToggle = useCallback(() => {
@@ -98,7 +98,9 @@ export default function Jobs() {
         <p>
           {view === 'saved'
             ? "Jobs you've bookmarked for later."
-            : 'Jobs ranked by how well they match your personality profile.'}
+            : data?.fitPersonalized
+              ? 'Jobs ranked by how well they match your personality profile.'
+              : 'Browse open roles. Sign in and complete the quiz to see a personalized fit score on each listing.'}
         </p>
       </div>
 

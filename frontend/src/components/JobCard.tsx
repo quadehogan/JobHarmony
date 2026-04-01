@@ -50,6 +50,7 @@ export default function JobCard({ job, onSaveToggle }: JobCardProps) {
 
   const postedText = job.postedDaysAgo === 1 ? '1 day ago' : `${job.postedDaysAgo} days ago`;
   const hasApplyUrl = typeof job.applyUrl === 'string' && job.applyUrl.length > 0;
+  const showFit = Boolean(job.fitLevel?.trim()) && job.fitScore > 0;
 
   return (
     <div
@@ -67,7 +68,11 @@ export default function JobCard({ job, onSaveToggle }: JobCardProps) {
           <h3>{job.title}</h3>
           <div className="jh-job-company">{job.company}</div>
         </div>
-        <div className={`jh-fit-badge ${job.fitLevel.toLowerCase()}`}>{job.fitScore}%</div>
+        {showFit ? (
+          <div className={`jh-fit-badge ${job.fitLevel.toLowerCase()}`}>{job.fitScore}%</div>
+        ) : (
+          <div className="jh-fit-badge-placeholder" aria-hidden="true" />
+        )}
       </div>
 
       <div className="jh-job-tags">
@@ -76,7 +81,7 @@ export default function JobCard({ job, onSaveToggle }: JobCardProps) {
         ))}
       </div>
 
-      <div className="jh-job-fit-reason">{job.fitReason}</div>
+      {showFit ? <div className="jh-job-fit-reason">{job.fitReason}</div> : null}
 
       <div className="jh-job-meta">
         <span>📍 {job.location}</span>

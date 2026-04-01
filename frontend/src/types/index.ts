@@ -71,6 +71,9 @@ export interface JobsApiResponse {
   allTags: string[];
   allTypes: string[];
   allLocations: string[];
+  /** True when fit scores are computed from the signed-in user's saved quiz. */
+  fitPersonalized?: boolean;
+  source?: string;
 }
 
 export interface RecruitApiResponse {
