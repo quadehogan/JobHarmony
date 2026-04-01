@@ -6,10 +6,9 @@ const router = Router();
 const PAGE = 1000;
 
 /**
- * OKR page `/okr` — distinct logged-in users with saved quiz dimension scores.
- * Self-contained; does not share code with the OKR1 stats route.
+ * OKR page `/okr1` — same metric definition, implemented separately from `/okr` stats.
  */
-router.get('/users-with-quiz-scores', async (_req: Request, res: Response) => {
+router.get('/users-with-quiz-scores-okr1', async (_req: Request, res: Response) => {
   try {
     const sessionIds = new Set<string>();
     let from = 0;
@@ -55,7 +54,7 @@ router.get('/users-with-quiz-scores', async (_req: Request, res: Response) => {
 
     res.json({ count: userIds.size });
   } catch (err) {
-    console.error('[stats /okr] Failed to count users with quiz scores:', err);
+    console.error('[stats /okr1] Failed to count users with quiz scores:', err);
     res.status(500).json({ message: 'Failed to load stats' });
   }
 });
